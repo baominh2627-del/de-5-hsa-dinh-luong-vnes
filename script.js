@@ -1,4 +1,4 @@
-import { examData } from "./data.js";
+import { examData } from "./data.js?v=3";
 import { db, ref, push, set, update, serverTimestamp } from "./firebase-config.js";
 import { getMTSeduSession, showLoginRequired, insertBackButton } from "./mtsedu-auth.js";
 
@@ -359,5 +359,6 @@ document.getElementById("review-btn").addEventListener("click", () => {
   examScreen.classList.remove("hidden");
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
+
 
 

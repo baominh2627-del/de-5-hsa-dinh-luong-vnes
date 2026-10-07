@@ -38,32 +38,52 @@ body {
   padding: 0 20px;
 }
 
-/* BẢNG ĐIỀU HƯỚNG STICKY NHỎ */
-#board-container {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 280px;
-  max-height: 400px;
+/* ===== THANH GHIM TRÊN CÙNG: ĐỒNG HỒ + BẢNG ĐIỀU HƯỚNG ===== */
+.top-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  margin-bottom: 24px;
   background: #fff;
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 500;
-  overflow-y: auto;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.18);
+}
+
+#board-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #fff;
+  padding: 8px 10px;
 }
 
 #board-container h3 {
+  display: none;
+}
+
+#question-board {
+  flex: 1;
+  min-width: 0;
+}
+
+#board-expand {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #f8fafc;
+  color: var(--navy);
   font-size: 13px;
   font-weight: bold;
-  color: var(--navy);
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  cursor: pointer;
 }
 
 .board-legend {
+  display: none;
   font-size: 11px;
   display: flex;
   flex-wrap: wrap;
@@ -106,13 +126,34 @@ body {
 }
 
 .q-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: nowrap;
   gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+#board-container.expanded #question-board {
+  max-height: 45vh;
+  overflow-y: auto;
+}
+
+#board-container.expanded .board-legend {
+  display: flex;
+}
+
+#board-container.expanded .q-grid {
+  flex-wrap: wrap;
+  overflow-x: visible;
 }
 
 .q-box {
-  padding: 8px;
+  flex: 0 0 auto;
+  min-width: 36px;
+  height: 34px;
+  padding: 0 8px;
   text-align: center;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -190,7 +231,7 @@ body {
 
 /* HEADER BÀI THI */
 .exam-header-block {
-  margin-bottom: 30px;
+  margin-bottom: 0;
 }
 
 .exam-header-top {
@@ -199,6 +240,10 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 12px 12px 0 0;
   border-bottom: none;
+}
+
+#login-screen .exam-header-top {
+  border-radius: 8px;
 }
 
 .meta-text {
@@ -248,16 +293,30 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 30px;
-  border-radius: 0 0 12px 12px;
+  padding: 10px 20px;
+  border-radius: 0;
   font-size: 14px;
+  gap: 12px;
 }
 
+.exam-info-bar .student-info {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exam-info-bar .progress-info,
+.exam-info-bar .timer-pill,
+.exam-info-bar .score-pill {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* thanh thông tin nằm trong .top-sticky nên không cần sticky riêng */
 .exam-info-bar.sticky {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  position: static;
 }
 
 .timer-pill {
@@ -533,16 +592,6 @@ body {
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  #board-container {
-    width: 240px;
-    bottom: 20px;
-    right: 20px;
-  }
-
-  .q-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
   .exam-title {
     font-size: 22px;
   }
@@ -552,27 +601,31 @@ body {
   }
 }
 
-@media (max-width: 480px) {
-  #board-container {
-    width: 200px;
-    bottom: 10px;
-    right: 10px;
-    max-height: 300px;
+@media (max-width: 600px) {
+  /* thanh ghim tràn hết chiều ngang màn hình điện thoại */
+  #exam-screen .top-sticky {
+    margin-left: -20px;
+    margin-right: -20px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
   }
 
-  .q-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .exam-info-bar {
+    padding: 8px 12px;
+    font-size: 12px;
+    gap: 8px;
+  }
+
+  .timer-pill,
+  .score-pill {
+    font-size: 14px;
+    padding: 3px 10px;
   }
 
   .q-num-flag {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .exam-info-bar {
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px 15px;
   }
 
   .tf-row {
@@ -626,3 +679,25 @@ body {
   transform: translateX(-50%) translateY(0);
 }
 
+/* ===== NÚT "TRANG CHỦ": không đè lên thanh ghim ===== */
+body {
+  padding-top: 56px;
+}
+
+#mtsedu-back-btn a {
+  position: absolute !important;
+  top: 10px !important;
+  left: 14px !important;
+  padding: 6px 14px !important;
+  font-size: 13px !important;
+}
+
+#exam-screen.container,
+#login-screen.container,
+#result-screen.container {
+  margin-top: 8px;
+}
+
+.question-card {
+  scroll-margin-top: 150px;
+}
